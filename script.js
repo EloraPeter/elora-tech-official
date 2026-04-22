@@ -1,52 +1,3 @@
-// // Mobile Menu Toggle
-// const hamburger = document.querySelector('.hamburger');
-// const navMenu = document.querySelector('.nav-menu');
-
-// hamburger.addEventListener('click', () => {
-//     hamburger.classList.toggle('active');
-//     navMenu.classList.toggle('active');
-// });
-
-// // Smooth Scrolling
-// document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-//     anchor.addEventListener('click', function (e) {
-//         e.preventDefault();
-//         document.querySelector(this.getAttribute('href')).scrollIntoView({
-//             behavior: 'smooth'
-//         });
-//     });
-// });
-
-// // Form Submission
-// document.querySelector('.contact-form').addEventListener('submit', function(e) {
-//     e.preventDefault();
-//     alert('Thank you! Your message has been sent. We\'ll reply within 24 hours.');
-//     this.reset();
-// });
-
-// // Animate on Scroll
-// const observerOptions = {
-//     threshold: 0.1,
-//     rootMargin: '0px 0px -50px 0px'
-// };
-
-// const observer = new IntersectionObserver((entries) => {
-//     entries.forEach(entry => {
-//         if (entry.isIntersecting) {
-//             entry.target.style.opacity = '1';
-//             entry.target.style.transform = 'translateY(0)';
-//         }
-//     });
-// }, observerOptions);
-
-// // Observe service cards
-// document.querySelectorAll('.service-card').forEach(card => {
-//     card.style.opacity = '0';
-//     card.style.transform = 'translateY(30px)';
-//     card.style.transition = 'all 0.6s ease';
-//     observer.observe(card);
-// });
-
 // Initialize AOS
 AOS.init({
     duration: 1000,
@@ -279,5 +230,27 @@ window.addEventListener('load', () => {
     if (subtitle) {
         const originalText = subtitle.textContent;
         typeWriter(subtitle, originalText, 50);
+    }
+});
+
+
+// Enhanced form with loading state
+document.querySelector('.contact-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.classList.add('loading');
+    
+    setTimeout(() => {
+        alert('🎉 Thank you! Your inquiry has been received. We\'ll respond within 24 hours to discuss building your system.');
+        this.reset();
+        submitBtn.classList.remove('loading');
+    }, 2500);
+});
+
+// Update all CTA buttons text
+document.querySelectorAll('.btn-secondary').forEach(btn => {
+    if (btn.textContent.includes('Start Project')) {
+        btn.innerHTML = btn.innerHTML.replace('Start Project', 'Work With Elora Tech');
     }
 });
