@@ -1189,62 +1189,7 @@
     }
 }
 
-/* ============================================ */
-/* JAVASCRIPT FOR COUNTER ANIMATION (Add to script.js) */
-/* ============================================ */
-/*
-// Counter Animation for Vision Stats
-function animateStats() {
-    const statNumbers = document.querySelectorAll('.stat-vision .stat-number');
-    
-    statNumbers.forEach(stat => {
-        const target = parseInt(stat.getAttribute('data-target'));
-        const isYear = stat.getAttribute('data-target') > 2000;
-        let current = isYear ? 2026 : 0;
-        const increment = target / 50;
-        const duration = 2000;
-        const stepTime = duration / 50;
-        
-        const updateCounter = () => {
-            if (current < target) {
-                current += increment;
-                if (current > target) current = target;
-                
-                if (isYear) {
-                    stat.textContent = Math.floor(current);
-                } else {
-                    stat.textContent = Math.floor(current) + '+';
-                }
-                
-                setTimeout(updateCounter, stepTime);
-            } else {
-                if (isYear) {
-                    stat.textContent = target;
-                } else {
-                    stat.textContent = target + '+';
-                }
-            }
-        };
-        
-        updateCounter();
-    });
-}
 
-// Trigger animation when section comes into view
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateStats();
-            observer.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 });
-
-const visionSection = document.querySelector('.vision');
-if (visionSection) {
-    observer.observe(visionSection);
-}
-*/
 
 
 /* ============================================ */

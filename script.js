@@ -259,3 +259,134 @@ document.querySelectorAll('.btn-secondary').forEach(btn => {
         btn.innerHTML = btn.innerHTML.replace('Start Project', 'Work With Elora Tech');
     }
 });
+
+/* ============================================ */
+/* JAVASCRIPT FOR COUNTER ANIMATION 
+/* ============================================ */
+
+// Counter Animation for Vision Stats
+function animateStats() {
+    const statNumbers = document.querySelectorAll('.stat-vision .stat-number');
+
+    statNumbers.forEach(stat => {
+        const target = parseInt(stat.getAttribute('data-target'));
+        const isYear = stat.getAttribute('data-target') > 2000;
+        let current = isYear ? 2026 : 0;
+        const increment = target / 50;
+        const duration = 2000;
+        const stepTime = duration / 50;
+
+        const updateCounter = () => {
+            if (current < target) {
+                current += increment;
+                if (current > target) current = target;
+
+                if (isYear) {
+                    stat.textContent = Math.floor(current);
+                } else {
+                    stat.textContent = Math.floor(current) + '+';
+                }
+
+                setTimeout(updateCounter, stepTime);
+            } else {
+                if (isYear) {
+                    stat.textContent = target;
+                } else {
+                    stat.textContent = target + '+';
+                }
+            }
+        };
+
+        updateCounter();
+    });
+}
+
+// Trigger animation when section comes into view
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            animateStats();
+            observer.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.5 });
+
+const visionSection = document.querySelector('.vision');
+if (visionSection) {
+    observer.observe(visionSection);
+}
+
+
+// Vision Stats Counter Animation
+function initVisionCounters() {
+    const statNumbers = document.querySelectorAll('.vision .stat-number');
+    let animated = false;
+
+    function animateStats() {
+        if (animated) return;
+        animated = true;
+
+        statNumbers.forEach(stat => {
+            const targetAttr = stat.getAttribute('data-target');
+            const target = parseInt(targetAttr);
+            const isYear = targetAttr.length === 4; // Year format
+            const currentText = stat.textContent;
+
+            // Parse current display value
+            let current = isYear ? 2026 : parseInt(currentText.replace(/\D/g, '')) || 0;
+            const duration = 2000;
+            const startTime = performance.now();
+
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Easing function for smooth animation
+                const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+
+                if (isYear) {
+                    const value = Math.floor(2026 + (target - 2026) * easeOutQuart);
+                    stat.textContent = value;
+                } else {
+                    const value = Math.floor(target * easeOutQuart);
+                    stat.textContent = value + '+';
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    // Final value
+                    stat.textContent = isYear ? target : target + '+';
+
+                    // Add celebration effect
+                    stat.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        stat.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+        });
+    }
+
+    // Use Intersection Observer to trigger animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setTimeout(animateStats, 300);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    const visionSection = document.querySelector('.vision');
+    if (visionSection) {
+        observer.observe(visionSection);
+    }
+}
+
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', function () {
+    initVisionCounters();
+});
