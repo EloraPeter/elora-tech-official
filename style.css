@@ -966,7 +966,7 @@ section {
 .about-content {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  gap: 4rem;
+  gap: 3rem;
   align-items: start;
   position: relative;
   z-index: 2;
