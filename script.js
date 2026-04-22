@@ -51,8 +51,8 @@ if (hamburger && navMenu) {
 
 // Close mobile menu when clicking outside
 document.addEventListener('click', (e) => {
-    if (navMenu?.classList.contains('active') && 
-        !navMenu.contains(e.target) && 
+    if (navMenu?.classList.contains('active') &&
+        !navMenu.contains(e.target) &&
         !hamburger?.contains(e.target)) {
         hamburger.classList.remove('active');
         navMenu.classList.remove('active');
@@ -66,11 +66,11 @@ navLinks.forEach(link => {
         e.preventDefault();
         const targetId = link.getAttribute('href')?.substring(1);
         const targetSection = document.getElementById(targetId);
-        
+
         if (targetSection) {
             const offset = 80; // Account for fixed header
             const targetPosition = targetSection.offsetTop - offset;
-            
+
             window.scrollTo({
                 top: targetPosition,
                 behavior: 'smooth'
@@ -121,22 +121,22 @@ function animateHeroCounters() {
                 const target = parseInt(counter.getAttribute('data-target'));
                 const duration = 2000;
                 const startTime = performance.now();
-                
+
                 function updateCounter(currentTime) {
                     const elapsed = currentTime - startTime;
                     const progress = Math.min(elapsed / duration, 1);
                     const easeOutQuart = 1 - Math.pow(1 - progress, 4);
                     const current = Math.floor(target * easeOutQuart);
-                    
+
                     counter.textContent = current.toLocaleString();
-                    
+
                     if (progress < 1) {
                         requestAnimationFrame(updateCounter);
                     } else {
                         counter.textContent = target.toLocaleString();
                     }
                 }
-                
+
                 requestAnimationFrame(updateCounter);
                 observer.unobserve(counter);
             }
@@ -146,13 +146,82 @@ function animateHeroCounters() {
     counters.forEach(counter => observer.observe(counter));
 }
 
+
+// ============================================ //
+// HERO CARDS INTERACTIVE EFFECTS
+// ============================================ //
+function initHeroCards() {
+    const cards = document.querySelectorAll('.card-float');
+
+    cards.forEach(card => {
+        // 3D tilt effect on mousemove
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 10;
+            const rotateY = (centerX - x) / 10;
+
+            card.style.transform = `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.1) translateY(-10px)`;
+        });
+
+        // Reset on mouse leave
+        card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+        });
+
+        // Click ripple effect
+        card.addEventListener('click', function (e) {
+            const ripple = document.createElement('span');
+            ripple.className = 'card-ripple';
+            ripple.style.cssText = `
+                position: absolute;
+                top: ${e.offsetY}px;
+                left: ${e.offsetX}px;
+                width: 100px;
+                height: 100px;
+                background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+                border-radius: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                animation: rippleEffect 0.6s ease-out;
+                pointer-events: none;
+                z-index: 100;
+            `;
+
+            this.appendChild(ripple);
+
+            setTimeout(() => ripple.remove(), 600);
+        });
+    });
+}
+
+// Add ripple animation to styles
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+    @keyframes rippleEffect {
+        to {
+            transform: translate(-50%, -50%) scale(4);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(rippleStyle);
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', initHeroCards);
+
+
 // ============================================ //
 // VISION STATS COUNTER ANIMATION
 // ============================================ //
 function initVisionCounters() {
     const statNumbers = document.querySelectorAll('.vision .stat-number');
     if (!statNumbers.length) return;
-    
+
     let animated = false;
 
     function animateStats() {
@@ -186,7 +255,7 @@ function initVisionCounters() {
                     requestAnimationFrame(updateCounter);
                 } else {
                     stat.textContent = isYear ? target : target + '+';
-                    
+
                     // Celebration effect
                     stat.style.transform = 'scale(1.1)';
                     setTimeout(() => {
@@ -220,7 +289,7 @@ function initVisionCounters() {
 function initServicesTabs() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     const tabContents = document.querySelectorAll('.tab-content');
-    
+
     if (!tabBtns.length) return;
 
     function switchTab(tabId) {
@@ -245,7 +314,7 @@ function initServicesTabs() {
         btn.addEventListener('click', () => {
             const tabId = btn.getAttribute('data-tab');
             switchTab(tabId);
-            
+
             // Update URL hash without scrolling
             history.pushState(null, null, `#${tabId}`);
         });
@@ -265,12 +334,12 @@ function initContactForm() {
     const contactForm = document.querySelector('.contact-form');
     if (!contactForm) return;
 
-    contactForm.addEventListener('submit', function(e) {
+    contactForm.addEventListener('submit', function (e) {
         e.preventDefault();
 
         const submitBtn = this.querySelector('button[type="submit"]');
         const originalContent = submitBtn.innerHTML;
-        
+
         // Show loading state
         submitBtn.classList.add('loading');
         submitBtn.disabled = true;
@@ -283,10 +352,10 @@ function initContactForm() {
         setTimeout(() => {
             // Success message
             showNotification('🎉 Thank you! Your inquiry has been received. We\'ll respond within 24 hours to discuss building your system.', 'success');
-            
+
             // Reset form
             this.reset();
-            
+
             // Reset button
             submitBtn.classList.remove('loading');
             submitBtn.disabled = false;
@@ -305,7 +374,7 @@ function showNotification(message, type = 'success') {
         </div>
         <button class="notification-close">&times;</button>
     `;
-    
+
     // Style the notification
     notification.style.cssText = `
         position: fixed;
@@ -324,14 +393,14 @@ function showNotification(message, type = 'success') {
         gap: 1rem;
         animation: slideInRight 0.3s ease;
     `;
-    
+
     document.body.appendChild(notification);
-    
+
     // Close button
     notification.querySelector('.notification-close').addEventListener('click', () => {
         notification.remove();
     });
-    
+
     // Auto remove after 5 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOutRight 0.3s ease';
@@ -351,7 +420,7 @@ function initUIEnhancements() {
     whatsappBtn.rel = 'noopener noreferrer';
     whatsappBtn.setAttribute('aria-label', 'Chat on WhatsApp');
     whatsappBtn.innerHTML = '<i class="fab fa-whatsapp"></i>';
-    
+
     // Style WhatsApp button
     whatsappBtn.style.cssText = `
         position: fixed;
@@ -371,15 +440,15 @@ function initUIEnhancements() {
         transition: all 0.3s ease;
         text-decoration: none;
     `;
-    
+
     whatsappBtn.addEventListener('mouseenter', () => {
         whatsappBtn.style.transform = 'scale(1.1) translateY(-5px)';
     });
-    
+
     whatsappBtn.addEventListener('mouseleave', () => {
         whatsappBtn.style.transform = 'scale(1) translateY(0)';
     });
-    
+
     document.body.appendChild(whatsappBtn);
 
     // Back to top button
@@ -387,7 +456,7 @@ function initUIEnhancements() {
     backToTop.className = 'back-to-top';
     backToTop.innerHTML = '<i class="fas fa-chevron-up"></i>';
     backToTop.setAttribute('aria-label', 'Back to top');
-    
+
     backToTop.style.cssText = `
         position: fixed;
         bottom: 30px;
@@ -406,7 +475,7 @@ function initUIEnhancements() {
         z-index: 998;
         box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
     `;
-    
+
     document.body.appendChild(backToTop);
 
     window.addEventListener('scroll', () => {
@@ -426,11 +495,11 @@ function initUIEnhancements() {
             behavior: 'smooth'
         });
     });
-    
+
     backToTop.addEventListener('mouseenter', () => {
         backToTop.style.transform = 'translateY(-5px)';
     });
-    
+
     backToTop.addEventListener('mouseleave', () => {
         backToTop.style.transform = 'translateY(0)';
     });
@@ -447,7 +516,7 @@ function initParallax() {
         const scrolled = window.pageYOffset;
         const rate = scrolled * 0.3;
         const heroContent = hero.querySelector('.hero-content');
-        
+
         if (heroContent) {
             heroContent.style.transform = `translateY(${rate}px)`;
         }
@@ -463,7 +532,7 @@ function initTypingEffect() {
 
     const originalText = subtitle.textContent;
     subtitle.textContent = '';
-    
+
     let i = 0;
     function typeWriter() {
         if (i < originalText.length) {
@@ -472,7 +541,7 @@ function initTypingEffect() {
             setTimeout(typeWriter, 50);
         }
     }
-    
+
     // Start typing after a short delay
     setTimeout(typeWriter, 500);
 }
@@ -547,19 +616,19 @@ function addAnimationStyles() {
 // ============================================ //
 // INITIALIZE EVERYTHING
 // ============================================ //
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Core functionality
     animateHeroCounters();
     initVisionCounters();
     initServicesTabs();
     initContactForm();
-    
+
     // UI Enhancements
     initUIEnhancements();
     initParallax();
     initTypingEffect();
     addAnimationStyles();
-    
+
     // Log success
     console.log('🚀 Elora Tech Ltd - Systems ready');
 });
@@ -571,12 +640,12 @@ window.addEventListener('load', () => {
     if (window.location.hash) {
         const targetId = window.location.hash.substring(1);
         const targetElement = document.getElementById(targetId);
-        
+
         if (targetElement) {
             setTimeout(() => {
                 const offset = 80;
                 const targetPosition = targetElement.offsetTop - offset;
-                
+
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
