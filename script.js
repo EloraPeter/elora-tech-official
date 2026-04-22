@@ -39,7 +39,7 @@ document.querySelectorAll('.nav-link').forEach(link => {
         const targetId = link.getAttribute('href').substring(1);
         const targetSection = document.getElementById(targetId);
         targetSection.scrollIntoView({ behavior: 'smooth' });
-        
+
         // Close mobile menu
         hamburger.classList.remove('active');
         navMenu.classList.remove('active');
@@ -49,12 +49,12 @@ document.querySelectorAll('.nav-link').forEach(link => {
 // Counter animation
 function animateCounters() {
     const counters = document.querySelectorAll('.stat-number');
-    
+
     counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-target'));
         const increment = target / 100;
         let current = 0;
-        
+
         const updateCounter = () => {
             if (current < target) {
                 current += increment;
@@ -64,7 +64,7 @@ function animateCounters() {
                 counter.textContent = target.toLocaleString();
             }
         };
-        
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -73,7 +73,7 @@ function animateCounters() {
                 }
             });
         });
-        
+
         observer.observe(counter);
     });
 }
@@ -87,39 +87,44 @@ const tabContents = document.querySelectorAll('.tab-content');
 tabBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         const targetTab = btn.getAttribute('data-tab');
-        
+
         // Update active tab button
         tabBtns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        
+
         // Update active tab content
         tabContents.forEach(content => content.classList.remove('active'));
         document.getElementById(targetTab).classList.add('active');
     });
 });
 
+const hash = window.location.hash.substring(1);
+if (hash && ['it', 'edu', 'digital'].includes(hash)) {
+    switchTab(hash);
+}
+
 // Portfolio hover effects
 document.querySelectorAll('.portfolio-item').forEach(item => {
     item.addEventListener('mouseenter', () => {
         item.style.transform = 'translateY(-10px) scale(1.02)';
     });
-    
+
     item.addEventListener('mouseleave', () => {
         item.style.transform = 'translateY(0) scale(1)';
     });
 });
 
 // Contact form submission
-document.querySelector('.contact-form').addEventListener('submit', function(e) {
+document.querySelector('.contact-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    
+
     // Simulate form submission
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.innerHTML;
-    
+
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
     submitBtn.disabled = true;
-    
+
     setTimeout(() => {
         alert('🎉 Thank you! Your message has been sent. We\'ll get back to you within 24 hours.');
         this.reset();
@@ -133,7 +138,7 @@ window.addEventListener('scroll', () => {
     const scrolled = window.pageYOffset;
     const hero = document.querySelector('.hero');
     const rate = scrolled * -0.5;
-    
+
     if (hero) {
         hero.style.transform = `translateY(${rate}px)`;
     }
@@ -143,7 +148,7 @@ window.addEventListener('scroll', () => {
 window.addEventListener('scroll', () => {
     let current = '';
     const sections = document.querySelectorAll('section');
-    
+
     sections.forEach(section => {
         const sectionTop = section.offsetTop;
         const sectionHeight = section.clientHeight;
@@ -151,7 +156,7 @@ window.addEventListener('scroll', () => {
             current = section.getAttribute('id');
         }
     });
-    
+
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('href') === `#${current}`) {
@@ -213,7 +218,7 @@ backToTop.addEventListener('click', () => {
 function typeWriter(element, text, speed = 100) {
     let i = 0;
     element.innerHTML = '';
-    
+
     function type() {
         if (i < text.length) {
             element.innerHTML += text.charAt(i);
@@ -235,12 +240,12 @@ window.addEventListener('load', () => {
 
 
 // Enhanced form with loading state
-document.querySelector('.contact-form').addEventListener('submit', function(e) {
+document.querySelector('.contact-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    
+
     const submitBtn = this.querySelector('button[type="submit"]');
     submitBtn.classList.add('loading');
-    
+
     setTimeout(() => {
         alert('🎉 Thank you! Your inquiry has been received. We\'ll respond within 24 hours to discuss building your system.');
         this.reset();

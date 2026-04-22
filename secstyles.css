@@ -341,27 +341,6 @@
   }
 }
 
-/* ============================================ */
-/* OPTIONAL ENHANCEMENTS */
-/* ============================================ */
-
-/* Add this HTML for optional stats row */
-/*
-<div class="founder-stats">
-  <div class="founder-stat">
-    <span class="number">15+</span>
-    <span class="label">Years Experience</span>
-  </div>
-  <div class="founder-stat">
-    <span class="number">50+</span>
-    <span class="label">Systems Built</span>
-  </div>
-  <div class="founder-stat">
-    <span class="number">100%</span>
-    <span class="label">Nigerian Owned</span>
-  </div>
-</div>
-*/
 
 /* If you want to add a founder name */
 .founder-name {
